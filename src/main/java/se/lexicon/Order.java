@@ -1,26 +1,27 @@
 package se.lexicon;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Order {
 
     private Customer customer;
-    private MenuItem item;
-    private int quantity;
+    private List<LineItem> items;
 
-    public Order(Customer customer, MenuItem item, int quantity) {
+    public Order(Customer customer) {
         this.customer = customer;
-        this.item = item;
-        this.quantity = quantity;
+        this.items  = new ArrayList<>();
     }
 
     public Customer getCustomer() {
         return customer;
     }
 
-    public MenuItem getItem() {
-        return item;
+    public void addItem(LineItem item) {
+        items.add(item);
     }
 
-    public int getQuantity() {
-        return quantity;
+    public List<LineItem> getItems() {
+        return items;
     }
 }

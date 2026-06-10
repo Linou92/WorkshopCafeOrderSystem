@@ -3,7 +3,12 @@ package se.lexicon;
 public class Calculator {
 
     public double subtotal(Order order) {
-        return order.getItem().getPrice() * order.getQuantity();
+
+        double subtotal = 0;
+        for (LineItem item : order.getItems()) {
+            subtotal += item.lineTotal();
+        }
+        return subtotal;
     }
 
     public double discount(double subtotal, boolean member) {

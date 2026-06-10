@@ -1,7 +1,7 @@
 package se.lexicon;
 
 public class CafeApp {
-
+    
     InputValidator inputValidator = new InputValidator();
     private CafeService service =  new CafeService();
 
@@ -28,11 +28,14 @@ public class CafeApp {
 
             IO.println("Hi " + name + "! Here is our menu:");
 
-            MenuItem item = selectItem();
-            int quantity = getQuantity();
+            displayMenu();
+
             boolean member = isMember();
 
-            Order order = service.takeOrder(name, item, quantity, member);
+            Customer customer = new Customer(name, member);
+            Order order = new Order(customer);
+
+            takeItems(order);
 
             service.printReceipt(order);
 
@@ -54,20 +57,7 @@ public class CafeApp {
         }
     }
 
-    private Order takeOrder(String name) {
-
-        IO.println("Hi " + name + "! Here is our menu:");
-
-        MenuItem item = selectItem();
-        int quantity = getQuantity();
-        boolean member = isMember();
-
-        Customer customer = new Customer(name, member);
-
-        return new Order(customer, item, quantity);
-    }
-
-    private MenuItem selectItem() {
+    private void displayMenu() {
 
                 IO.println("=============================\n" +
                         "       Lexicon Cafe\n" +
@@ -80,13 +70,6 @@ public class CafeApp {
                             menu[i].getPrice()));
                 }
                 IO.println("=============================\n");
-        int choice = inputValidator.readIntInRange(
-                "Enter item number (1-5): ",
-                1,
-                menu.length
-        );
-
-        return menu[choice - 1];
     }
 
     private int getQuantity() {
@@ -95,6 +78,27 @@ public class CafeApp {
 
     private boolean isMember() {
         return inputValidator.readYesNo("Loyalty member? (yes/no): ");
+    }
+
+    private void takeItems(Order order) {
+
+        while (true) {
+
+            int choice = inputValidator.readIntInRange(
+                    "Enter item number (1-5, or 0 to finish): ",
+                    0,
+                    menu.length
+            );
+
+            if (choice == 0) {
+                break;
+            }
+
+            int quantity = getQuantity();
+            MenuItem item = menu[choice - 1];
+            order.addItem(new LineItem(item, quantity));
+            IO.println(item.getName() + " added.");
+        }
     }
 
 }

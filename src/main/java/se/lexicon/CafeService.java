@@ -5,11 +5,6 @@ public class CafeService {
     private Calculator calculator = new Calculator();
     private ReceiptPrinter receiptPrinter = new ReceiptPrinter();
 
-    public Order takeOrder(String name, MenuItem item, int quantity, boolean member) {
-        Customer customer = new Customer(name, member);
-        return new Order(customer, item, quantity);
-    }
-
     public double calculateTotal(Order order) {
 
         double subtotal = calculator.subtotal(order);

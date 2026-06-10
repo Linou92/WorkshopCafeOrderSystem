@@ -35,15 +35,24 @@ public class ReceiptPrinter {
                 LEXICON CAFE
         =============================
         Customer : %s
-        Item     : %s x %d
+        -----------------------------
+        """,
+        order.getCustomer().getName()));
+        for (LineItem line : order.getItems()) {
+            IO.println(String.format(
+                    "  %-15s x%-3d %8.2f SEK",
+                    line.getItem().getName(),
+                    line.getQuantity(),
+                    line.lineTotal()
+            ));
+        }
+        IO.println(String.format("""
+        -----------------------------
         Subtotal : %.2f SEK
         %sVAT      : %.2f SEK
         -----------------------------
         TOTAL    : %.2f SEK
         """,
-        order.getCustomer().getName(),
-        order.getItem().getName(),
-        order.getQuantity(),
         subtotal,
         discount > 0 ? String.format("Discount : -%.2f SEK%n", discount) : "",
         vat,
