@@ -5,6 +5,8 @@ import java.util.Scanner;
 public class CafeApp {
 
     static Scanner scanner = new Scanner(System.in);
+    static String[] items = {"Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"};
+    static double[] prices = {25.00, 35.00, 40.00, 30.00, 55.00};
 
     public static String getCustomerName(){
         IO.println("Welcome! What is your name? ");
@@ -12,8 +14,6 @@ public class CafeApp {
     }
 
     public  static void displayCafeMenu() {
-        String[] items = {"Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"};
-        double[] prices = {25.00, 35.00, 40.00, 30.00, 55.00};
         IO.println("=============================\n" +
                 "       Lexicon Cafe\n" +
                 "=============================");
