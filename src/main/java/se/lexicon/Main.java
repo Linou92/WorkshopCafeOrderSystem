@@ -8,5 +8,8 @@ public class Main {
         String name = CafeApp.getCustomerName();
         IO.println("Hi " + name + "! Here is our menu:");
         CafeApp.displayCafeMenu();
+        int itemChoice = CafeApp.getItemChoice();
+        int quantity = CafeApp.getQuantity();
+        boolean member = CafeApp.isMember();
     }
 }
