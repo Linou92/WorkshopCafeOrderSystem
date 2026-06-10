@@ -1,95 +1,107 @@
 package se.lexicon;
 
-import java.util.Scanner;
-
 public class CafeApp {
 
-    static Scanner scanner = new Scanner(System.in);
-    static String[] items = {"Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"};
-    static double[] prices = {25.00, 35.00, 40.00, 30.00, 55.00};
+    Calculator calculator = new Calculator();
+    ReceiptPrinter receiptPrinter = new ReceiptPrinter();
 
-    public static String getCustomerName(){
-        IO.println("Welcome! What is your name? ");
-        return scanner.nextLine();
+    private MenuItem[] menu = {
+            new MenuItem("Espresso", 25),
+            new MenuItem("Cappuccino", 35),
+            new MenuItem("Latte", 40),
+            new MenuItem("Croissant", 30),
+            new MenuItem("Sandwich", 55)
+    };
+
+    public void start() {
+
+        boolean firstCustomer = true;
+        int customersServed = 0;
+        double totalRevenue = 0;
+
+        while (true) {
+
+            String name = askForCustomer(firstCustomer);
+            firstCustomer = false;
+
+            if (name.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            Order order = takeOrder(name);
+
+            receiptPrinter.printReceipt(order);
+
+            double total = calculateTotal(order);
+
+            customersServed++;
+            totalRevenue += total;
+        }
+
+        receiptPrinter.printEndReport(customersServed, totalRevenue);
     }
 
-    public  static void displayCafeMenu() {
+    private String askForCustomer(boolean firstCustomer) {
+
+        if (firstCustomer) {
+            IO.println("Welcome! What is your name?");
+        } else {
+            IO.print("Next customer name (or 'done'): ");
+        }
+
+        return IO.readln();
+    }
+
+    private Order takeOrder(String name) {
+
+        IO.println("Hi " + name + "! Here is our menu:");
+
+        MenuItem item = selectItem();
+        int quantity = getQuantity();
+        boolean member = isMember();
+
+        Customer customer = new Customer(name, member);
+
+        return new Order(customer, item, quantity);
+    }
+
+    private double calculateTotal(Order order) {
+
+        double subtotal = calculator.subtotal(order);
+        double discount = calculator.discount(subtotal, order.getCustomer().isMember());
+        double vat = calculator.vat(subtotal - discount);
+
+        return subtotal - discount + vat;
+    }
+
+    private MenuItem selectItem() {
+
         IO.println("=============================\n" +
                 "       Lexicon Cafe\n" +
                 "=============================");
-        for(int i = 0; i < items.length; i++) {
+        for(int i = 0; i < menu.length; i++) {
             IO.println(String.format(
                     "%d. %-15s %6.2f SEK",
                     i+1,
-                    items[i],
-                    prices[i]));
+                    menu[i].getName(),
+                    menu[i].getPrice()));
         }
         IO.println("=============================\n");
-    }
 
-    public static int getItemChoice() {
         IO.println("Enter item number (1-5): ");
-        return scanner.nextInt();
+        int choice = Integer.parseInt(IO.readln());
+
+        return menu[choice - 1];
     }
 
-    public static int getQuantity() {
+    private int getQuantity() {
         IO.println("How many? ");
-        return scanner.nextInt();
+        return Integer.parseInt(IO.readln());
     }
 
-    public static boolean isMember() {
-        scanner.nextLine();
+    private boolean isMember() {
         IO.println("Loyalty member? (yes/no): ");
-        String answer = scanner.nextLine();
-        return answer.equalsIgnoreCase("yes");
+        return IO.readln().equalsIgnoreCase("yes");
     }
 
-    public static double calculateSubtotal(double unitPrice, int quantity){
-        return unitPrice * quantity;
-    }
-
-    public static double calculateDiscount(double subtotal, boolean member){
-        // if member, get 15% off
-        if(member){
-            return subtotal * 0.15;
-        }
-        // else if order > 150 SEK get 10% off
-        if(subtotal > 150){
-            return subtotal * 0.10;
-        }
-        return 0;
-    }
-
-    public static double calculateVat(double priceAfterDiscount){
-        // 12% VAT applied after discount
-        return priceAfterDiscount * 0.12;
-    }
-
-    public static void printReceipt(String name, String itemName, int quantity, double subtotal, double discount, double vat, double total){
-        String discountLine = "";
-        if (discount > 0) {
-            discountLine = String.format("Discount : -%.2f SEK%n", discount);
-        }
-        IO.println(String.format("""
-        =============================
-                LEXICON CAFE
-        =============================
-        Customer : %s
-        Item     : %s x %d
-        Subtotal : %.2f SEK
-        %sVAT      : %.2f SEK
-        -----------------------------
-        TOTAL    : %.2f SEK
-        """,
-        name, itemName, quantity,
-                subtotal, discountLine, vat, total)
-        );
-    }
-
-    public  static void displayEndMessage(String name) {
-        IO.println("=============================\n" +
-                "     Thank you, " + name +"!\n" +
-                "     See you next time.\n" +
-                "=============================");
-    }
 }
