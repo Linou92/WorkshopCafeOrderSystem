@@ -2,9 +2,8 @@ package se.lexicon;
 
 public class CafeApp {
 
-    Calculator calculator = new Calculator();
-    ReceiptPrinter receiptPrinter = new ReceiptPrinter();
     InputValidator inputValidator = new InputValidator();
+    private CafeService service =  new CafeService();
 
     private MenuItem[] menu = {
             new MenuItem("Espresso", 25),
@@ -25,21 +24,25 @@ public class CafeApp {
             String name = askForCustomer(firstCustomer);
             firstCustomer = false;
 
-            if (name.equalsIgnoreCase("done")) {
-                break;
-            }
+            if (name.equalsIgnoreCase("done")) break;
 
-            Order order = takeOrder(name);
+            IO.println("Hi " + name + "! Here is our menu:");
 
-            receiptPrinter.printReceipt(order);
+            MenuItem item = selectItem();
+            int quantity = getQuantity();
+            boolean member = isMember();
 
-            double total = calculateTotal(order);
+            Order order = service.takeOrder(name, item, quantity, member);
+
+            service.printReceipt(order);
+
+            double total = service.calculateTotal(order);
 
             customersServed++;
             totalRevenue += total;
         }
 
-        receiptPrinter.printEndReport(customersServed, totalRevenue);
+        service.printEndReport(customersServed, totalRevenue);
     }
 
     private String askForCustomer(boolean firstCustomer) {
@@ -62,15 +65,6 @@ public class CafeApp {
         Customer customer = new Customer(name, member);
 
         return new Order(customer, item, quantity);
-    }
-
-    private double calculateTotal(Order order) {
-
-        double subtotal = calculator.subtotal(order);
-        double discount = calculator.discount(subtotal, order.getCustomer().isMember());
-        double vat = calculator.vat(subtotal - discount);
-
-        return subtotal - discount + vat;
     }
 
     private MenuItem selectItem() {
