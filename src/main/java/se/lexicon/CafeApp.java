@@ -4,6 +4,7 @@ public class CafeApp {
 
     Calculator calculator = new Calculator();
     ReceiptPrinter receiptPrinter = new ReceiptPrinter();
+    InputValidator inputValidator = new InputValidator();
 
     private MenuItem[] menu = {
             new MenuItem("Espresso", 25),
@@ -44,12 +45,10 @@ public class CafeApp {
     private String askForCustomer(boolean firstCustomer) {
 
         if (firstCustomer) {
-            IO.println("Welcome! What is your name?");
+            return InputValidator.readName("Welcome! What is your name? ");
         } else {
-            IO.print("Next customer name (or 'done'): ");
+            return InputValidator.readName("Next customer name (or 'done'): ");
         }
-
-        return IO.readln();
     }
 
     private Order takeOrder(String name) {
@@ -76,32 +75,32 @@ public class CafeApp {
 
     private MenuItem selectItem() {
 
-        IO.println("=============================\n" +
-                "       Lexicon Cafe\n" +
-                "=============================");
-        for(int i = 0; i < menu.length; i++) {
-            IO.println(String.format(
-                    "%d. %-15s %6.2f SEK",
-                    i+1,
-                    menu[i].getName(),
-                    menu[i].getPrice()));
-        }
-        IO.println("=============================\n");
-
-        IO.println("Enter item number (1-5): ");
-        int choice = Integer.parseInt(IO.readln());
+                IO.println("=============================\n" +
+                        "       Lexicon Cafe\n" +
+                        "=============================");
+                for(int i = 0; i < menu.length; i++) {
+                    IO.println(String.format(
+                            "%d. %-15s %6.2f SEK",
+                            i+1,
+                            menu[i].getName(),
+                            menu[i].getPrice()));
+                }
+                IO.println("=============================\n");
+        int choice = inputValidator.readIntInRange(
+                "Enter item number (1-5): ",
+                1,
+                menu.length
+        );
 
         return menu[choice - 1];
     }
 
     private int getQuantity() {
-        IO.println("How many? ");
-        return Integer.parseInt(IO.readln());
+        return inputValidator.readPositiveInt("How many? ");
     }
 
     private boolean isMember() {
-        IO.println("Loyalty member? (yes/no): ");
-        return IO.readln().equalsIgnoreCase("yes");
+        return inputValidator.readYesNo("Loyalty member? (yes/no): ");
     }
 
 }
