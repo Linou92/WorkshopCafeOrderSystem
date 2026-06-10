@@ -65,4 +65,31 @@ public class CafeApp {
         return priceAfterDiscount * 0.12;
     }
 
+    public static void printReceipt(String name, String itemName, int quantity, double subtotal, double discount, double vat, double total){
+        String discountLine = "";
+        if (discount > 0) {
+            discountLine = String.format("Discount : -%.2f SEK%n", discount);
+        }
+        IO.println(String.format("""
+        =============================
+                LEXICON CAFE
+        =============================
+        Customer : %s
+        Item     : %s x %d
+        Subtotal : %.2f SEK
+        %sVAT      : %.2f SEK
+        -----------------------------
+        TOTAL    : %.2f SEK
+        """,
+        name, itemName, quantity,
+                subtotal, discountLine, vat, total)
+        );
+    }
+
+    public  static void displayEndMessage(String name) {
+        IO.println("=============================\n" +
+                "     Thank you, " + name +"!\n" +
+                "     See you next time.\n" +
+                "=============================");
+    }
 }

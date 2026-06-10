@@ -23,9 +23,12 @@ public class Main {
         double discount = CafeApp.calculateDiscount(subtotal, member);
         double vat = CafeApp.calculateVat(subtotal - discount);
         double total = subtotal - discount + vat;
-        IO.println("subtotal: " + subtotal +
-                "\ndiscount: " + discount +
-                "\nvat: " + vat +
-                "\ntotal: " + total);
+
+        // print receipt
+        CafeApp.printReceipt(name, itemName, quantity, subtotal, discount, vat, total);
+
+        // display end message
+        CafeApp.displayEndMessage(name);
     }
+
 }
