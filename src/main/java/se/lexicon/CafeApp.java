@@ -43,4 +43,26 @@ public class CafeApp {
         String answer = scanner.nextLine();
         return answer.equalsIgnoreCase("yes");
     }
+
+    public static double calculateSubtotal(double unitPrice, int quantity){
+        return unitPrice * quantity;
+    }
+
+    public static double calculateDiscount(double subtotal, boolean member){
+        // if member, get 15% off
+        if(member){
+            return subtotal * 0.15;
+        }
+        // else if order > 150 SEK get 10% off
+        if(subtotal > 150){
+            return subtotal * 0.10;
+        }
+        return 0;
+    }
+
+    public static double calculateVat(double priceAfterDiscount){
+        // 12% VAT applied after discount
+        return priceAfterDiscount * 0.12;
+    }
+
 }
