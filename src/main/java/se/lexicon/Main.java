@@ -5,6 +5,8 @@ package se.lexicon;
 public class Main {
     static void main() {
         // greet user
-        CafeApp.greetUser();
+        String name = CafeApp.getCustomerName();
+        IO.println("Hi " + name + "! Here is our menu:");
+        CafeApp.displayCafeMenu();
     }
 }
