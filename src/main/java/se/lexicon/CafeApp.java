@@ -51,9 +51,9 @@ public class CafeApp {
     private String askForCustomer(boolean firstCustomer) {
 
         if (firstCustomer) {
-            return InputValidator.readName("Welcome! What is your name? ");
+            return inputValidator.readName("Welcome! What is your name? ");
         } else {
-            return InputValidator.readName("Next customer name (or 'done'): ");
+            return inputValidator.readName("Next customer name (or 'done'): ");
         }
     }
 

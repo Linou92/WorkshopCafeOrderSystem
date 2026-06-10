@@ -17,4 +17,9 @@ public class MenuItem {
     public double getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + price + " SEK)";
+    }
 }

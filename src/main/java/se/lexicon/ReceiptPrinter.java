@@ -2,63 +2,68 @@ package se.lexicon;
 
 public class ReceiptPrinter {
 
-    private void displayEndMessage(String name) {
-        IO.println("=============================\n" +
-                "     Thank you, " + name +"!\n" +
-                "     See you next time.\n" +
-                "=============================");
-    }
+    private Calculator calculator = new Calculator();
 
-    public void printEndReport(int customers, double revenue) {
+    public String buildReceipt(Order order) {
 
-        IO.println("""
-                ==============================
-                      END OF DAY REPORT
-                ==============================
-                """);
-
-        IO.println("Customers served : " + customers);
-        IO.println("Total revenue    : " + String.format("%.2f SEK", revenue));
-        IO.println("==============================");
-    }
-
-    public void printReceipt(Order order) {
-
-        Calculator calculator = new Calculator();
         double subtotal = calculator.subtotal(order);
         double discount = calculator.discount(subtotal, order.getCustomer().isMember());
         double vat = calculator.vat(subtotal - discount);
         double total = subtotal - discount + vat;
 
-        IO.println(String.format("""
-        =============================
-                LEXICON CAFE
-        =============================
-        Customer : %s
-        -----------------------------
-        """,
-        order.getCustomer().getName()));
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("""
+                =============================
+                        LEXICON CAFE
+                =============================
+                Customer : %s
+                ---------------------------------------
+                """.formatted(order.getCustomer().getName()));
+
         for (LineItem line : order.getItems()) {
-            IO.println(String.format(
-                    "  %-15s x%-3d %8.2f SEK",
+
+            sb.append(String.format(
+                    "  %-15s x%-3d %8.2f SEK%n",
                     line.getItem().getName(),
                     line.getQuantity(),
                     line.lineTotal()
             ));
         }
-        IO.println(String.format("""
-        -----------------------------
-        Subtotal : %.2f SEK
-        %sVAT      : %.2f SEK
-        -----------------------------
-        TOTAL    : %.2f SEK
-        """,
-        subtotal,
-        discount > 0 ? String.format("Discount : -%.2f SEK%n", discount) : "",
-        vat,
-        total)
-        );
 
-        displayEndMessage(order.getCustomer().getName());
+        sb.append(String.format("""
+                --------------------------------------
+                Subtotal : %.2f SEK
+                """, subtotal));
+
+        if (discount > 0) {
+            sb.append(String.format("Discount : -%.2f SEK%n", discount));
+        }
+
+        sb.append(String.format("""
+                VAT      : %.2f SEK
+                --------------------------------------
+                TOTAL    : %.2f SEK
+                =============================
+                """, vat, total));
+
+        sb.append("\nThank you, ")
+                .append(order.getCustomer().getName())
+                .append("!\nSee you next time.\n" +
+                        "=============================");
+
+        return sb.toString();
+    }
+
+    public String buildEndReport(int customersServed, double revenue) {
+
+        return """
+            ==============================
+                  END OF DAY REPORT
+            ==============================
+            Customers served : %d
+            Total revenue    : %.2f SEK
+            ==============================
+            """.formatted(customersServed, revenue);
     }
 }

@@ -15,10 +15,12 @@ public class CafeService {
     }
 
     public void printReceipt(Order order) {
-        receiptPrinter.printReceipt(order);
+        String receipt = receiptPrinter.buildReceipt(order);
+        IO.println(receipt); // if console, or return to GUI
     }
 
     public void printEndReport(int customersServed, double revenue) {
-        receiptPrinter.printEndReport(customersServed, revenue);
+            String report = receiptPrinter.buildEndReport(customersServed, revenue);
+            IO.println(report); // console version
     }
 }

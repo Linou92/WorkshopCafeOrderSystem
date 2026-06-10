@@ -54,7 +54,7 @@ public class InputValidator {
         }
     }
 
-    public static String readName(String prompt) {
+    public String readName(String prompt) {
 
         while (true) {
 
